@@ -31,7 +31,7 @@ def create_app():
     app.config['SESSION_COOKIE_SECURE'] = True
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-    app.config['PERMANENT_SESSION_LIFETIME'] = 1800  # 30 minutes
+    app.config['PERMANENT_SESSION_LIFETIME'] = 20 # 30 minutes
     app.config['PREFERRED_URL_SCHEME'] = 'https'
 
     # CSRF Protection
