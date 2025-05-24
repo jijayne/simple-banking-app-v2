@@ -1,5 +1,90 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+/* Global */
+body {
+    background: linear-gradient(to right, #f0f2f5, #ffffff);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.container {
+    max-width: 1080px;
+}
+
+/* Card */
+.card {
+    border: none;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Headings */
+.card-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #007bff;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #343a40;
+}
+
+p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* List styling */
+.list-group-item {
+    background-color: transparent;
+    border: none;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 0.95rem;
+    color: #444;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.list-group-item::before {
+    content: "✔";
+    color: #0d6efd;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Feature Cards */
+.card.h-100 {
+    background-color: #f9fafc;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card.h-100:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card.h-100 h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+.card.h-100 p {
+    font-size: 0.95rem;
+    color: #555;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container py-5">
     <div class="card shadow">
@@ -48,7 +133,7 @@
                     <p>SafeLedger is built using modern web technologies to ensure reliability and performance:</p>
                     <div class="row text-center">
                         <div class="col-md-3 mb-3">
-                            <div class="card h-100">
+                            <div class="card h-100 p-3">
                                 <div class="card-body">
                                     <h5>Backend</h5>
                                     <p>Python with Flask framework</p>
@@ -56,7 +141,7 @@
                             </div>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="card h-100">
+                            <div class="card h-100 p-3">
                                 <div class="card-body">
                                     <h5>Database</h5>
                                     <p>MySQL with SQLAlchemy ORM</p>
@@ -64,7 +149,7 @@
                             </div>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="card h-100">
+                            <div class="card h-100 p-3">
                                 <div class="card-body">
                                     <h5>Frontend</h5>
                                     <p>HTML, CSS, Bootstrap 5</p>
@@ -72,7 +157,7 @@
                             </div>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <div class="card h-100">
+                            <div class="card h-100 p-3">
                                 <div class="card-body">
                                     <h5>Security</h5>
                                     <p>Flask-Limiter, Flask-Login, Flask-Bcrypt</p>
@@ -85,4 +170,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
