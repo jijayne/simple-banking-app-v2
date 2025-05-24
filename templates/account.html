@@ -1,5 +1,66 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    body {
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .balance-card {
+        background: linear-gradient(135deg, #1e88e5, #42a5f5);
+        color: white;
+        border: none;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .balance-card h2 {
+        font-weight: 700;
+    }
+
+    .balance-card .btn {
+        background-color: white;
+        color: #1e88e5;
+        font-weight: 600;
+    }
+
+    .balance-card .btn:hover {
+        background-color: #e3f2fd;
+    }
+
+    .card {
+        border-radius: 0.75rem;
+        border: none;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+    .transaction-item {
+        padding: 1rem;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .transaction-item:last-child {
+        border-bottom: none;
+    }
+
+    .transaction-item.sent {
+        background-color: #fff3f3;
+    }
+
+    .transaction-item.received {
+        background-color: #f3fff5;
+    }
+
+    @media (max-width: 768px) {
+        .balance-card .btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-lg-8 offset-lg-2">
@@ -85,4 +146,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
