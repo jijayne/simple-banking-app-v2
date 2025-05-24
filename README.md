@@ -1,274 +1,177 @@
-# Simple Banking App
+# SafeLedger
 
-A user-friendly and responsive Flask-based banking application designed for deployment on PythonAnywhere. This application allows users to create accounts, perform simulated money transfers between accounts, view transaction history, and securely manage their credentials.
+## Group Members
+- [Jane Cagorong]
+- [Justine Son Camila]
+- [Mark Angelo Umacam]
 
-## Features
 
-- **User Authentication**
-  - Secure login with username/password
-  - Registration of new users
-  - Password recovery mechanism (email-based)
+---
 
-- **Account Management**
-  - Display of account balance
-  - View recent transaction history (last 10 transactions)
+## Introduction
 
-- **Fund Transfer**
-  - Transfer money to other registered users
-  - Confirmation screen before completing transfers
-  - Transaction history updated after transfers
+SafeLedger Banking App is a web-based banking platform that allows users to register, log in, manage their accounts, and perform transactions such as transfers and deposits. This project was originally developed as a simple demonstration of online banking features and has since been enhanced with robust security measures.
 
-- **User Role Management**
-  - Regular user accounts
-  - Admin users with account approval capabilities
-  - Manager users who can manage admin accounts
+---
 
-- **Location Data Integration**
-  - Philippine Standard Geographic Code (PSGC) API integration
-  - Hierarchical location data selection (Region, Province, City, Barangay)
-  - Form fields pre-populated with location data
+## Objectives
 
-- **Admin Features**
-  - User account approval workflow
-  - Account activation/deactivation
-  - Deposit funds to user accounts
-  - Create new accounts
-  - Edit user information
+- Provide a user-friendly platform for basic banking operations.
+- Ensure the confidentiality, integrity, and availability of user data.
+- Identify and remediate security vulnerabilities through assessment and best practices.
+- Demonstrate secure coding and deployment practices for web applications.
 
-- **Manager Features**
-  - Create and manage admin accounts
-  - View admin transaction logs
-  - Monitor all system transfers
+---
 
-- **Security**
-  - Password hashing with bcrypt for secure storage
-  - Secure session management
-  - Token-based password reset
-  - API rate limiting to prevent abuse
-  - CSRF protection for all forms
+## Original Application Features
 
-## Getting Started
+- User registration and login
+- Account dashboard with balance display
+- Money transfer between users
+- Deposit functionality (admin/manager)
+- User management (admin/manager)
+- Transaction history
+- Password reset via email (simulated)
+- Basic input validation
 
-### Prerequisites
-- Python 3.7+
-- pip (Python package manager)
-- MySQL Server 5.7+ or MariaDB 10.2+
+---
 
-### Database Setup
+## Security Assessment Findings
 
-1. Install MySQL Server or MariaDB if you haven't already:
+**Vulnerabilities identified in the original application:**
+- Weak or missing input validation on forms
+- Insecure session and cookie settings
+- Lack of strong password policy enforcement
+- Insufficient CSRF protection on some forms
+- No custom error pages (information leakage risk)
+- Outdated or unpinned dependencies
+- No rate limiting on sensitive endpoints
+- Potential for SQL injection and XSS due to unsanitized inputs
+- Incomplete authorization checks on admin/manager routes
+- No enforcement of HTTPS or secure communication
+
+---
+
+## Security Improvements Implemented
+
+- **Input Validation:**  
+  Enhanced both client-side and server-side validation for all forms using WTForms and HTML5 attributes.
+- **Password Security:**  
+  Enforced strong password policies and used bcrypt for secure password hashing.
+- **Session Management:**  
+  Enabled secure, HTTP-only, and SameSite cookies; implemented session timeouts.
+- **CSRF Protection:**  
+  Ensured CSRF tokens are present and validated on all forms.
+- **Error Handling:**  
+  Added custom 404 and 500 error pages to prevent information leakage.
+- **Dependency Management:**  
+  Pinned all dependencies to specific versions and regularly audited for vulnerabilities.
+- **Rate Limiting:**  
+  Applied Flask-Limiter to sensitive routes (login, registration, transfers).
+- **Output Encoding:**  
+  Ensured all user input is properly escaped in templates to prevent XSS.
+- **Authorization:**  
+  Strengthened role-based access control for admin and manager routes.
+- **Secure Communication:**  
+  Configured the app to prefer HTTPS and set secure cookie flags.
+
+---
+
+## Penetration Testing Report
+
+**Summary of vulnerabilities identified:**
+- Weak password acceptance and lack of complexity checks.
+- Session cookies were not marked as Secure or HttpOnly.
+- Forms were susceptible to CSRF attacks.
+- Some endpoints lacked rate limiting, allowing brute-force attempts.
+- Error pages leaked stack traces and sensitive information.
+
+**Exploitation steps:**
+- Used OWASP ZAP and Burp Suite to test for XSS, CSRF, and authentication bypass.
+- Attempted SQL injection and XSS payloads in form fields.
+- Manipulated session cookies to test for session fixation/hijacking.
+- Submitted forms without CSRF tokens to test for CSRF vulnerabilities.
+
+**Recommendations:**
+- Enforce strong password policies.
+- Always use secure, HTTP-only cookies.
+- Implement CSRF protection on all forms.
+- Add rate limiting to sensitive endpoints.
+- Use custom error pages to prevent information leakage.
+
+---
+
+## Remediation Plan
+
+**Steps taken to address identified vulnerabilities:**
+1. Implemented strong input validation and password policies.
+2. Secured session management and cookies.
+3. Added CSRF protection to all forms.
+4. Created custom error pages for 404 and 500 errors.
+5. Pinned and updated all dependencies; added regular security audits.
+6. Applied rate limiting to login, registration, and transfer routes.
+7. Reviewed and improved authorization checks for all sensitive routes.
+8. Configured the app to use HTTPS and secure cookies.
+
+---
+
+## Technology Stack
+
+- Python 3.x
+- Flask 2.x/3.x
+- Flask-Login
+- Flask-WTF
+- Flask-Limiter
+- Flask-Bcrypt
+- Flask-SQLAlchemy
+- PyMySQL
+- WTForms
+- Bootstrap (for frontend)
+- MySQL (database)
+- pip-audit (for dependency security)
+- OWASP ZAP, Burp Suite, Nikto, Nmap (for security testing)
+
+---
+
+## Setup Instructions
+
+1. **Clone the repository:**
    ```
-   # For Ubuntu/Debian
-   sudo apt update
-   sudo apt install mysql-server
-   
-   # For macOS with Homebrew
-   brew install mysql
-   
-   # For Windows
-   # Download and install from the official website
+   git clone https://github.com/jijayne/simple-banking-app-v2.git
+   cd secure-simple-banking-app
    ```
 
-2. Create a database user and set privileges:
+2. **Create and activate a virtual environment:**
    ```
-   mysql -u root -p
-   
-   # In MySQL prompt
-   CREATE USER 'bankapp'@'localhost' IDENTIFIED BY 'your_password';
-   GRANT ALL PRIVILEGES ON *.* TO 'bankapp'@'localhost';
-   FLUSH PRIVILEGES;
-   EXIT;
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Update the `.env` file with your MySQL credentials:
-   ```
-   DATABASE_URL=mysql+pymysql://bankapp:your_password@localhost/simple_banking
-   MYSQL_USER=bankapp
-   MYSQL_PASSWORD=your_password
-   MYSQL_HOST=localhost
-   MYSQL_PORT=3306
-   MYSQL_DATABASE=simple_banking
-   ```
-
-4. Initialize the database:
-   ```
-   python init_db.py
-   ```
-
-### Installation
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/lanlanjr/simple-banking-app.git
-   cd simple-banking-app
-   
-   # Set up your own repository
-   # First, create a new repository named 'simple-banking-app-v2' on GitHub
-   
-   # Then configure your local repository
-   git remote remove origin
-   git remote add origin https://github.com/yourusername/simple-banking-app-v2.git
-   git remote set-url origin https://yourusername@github.com/yourusername/simple-banking-app-v2.git
-   git branch -M main
-   git push -u origin main
-   
-   # Note: Replace 'yourusername' with your actual GitHub username
-   ```
-
-2. Install the required packages:
+3. **Install dependencies:**
    ```
    pip install -r requirements.txt
    ```
 
-3. Run the application:
+4. **Set up environment variables:**
+   - Copy `.env.example` to `.env` and fill in your database and secret key values.
+
+5. **Initialize the database:**
+   ```
+   python app.py  # The app will auto-create tables and a default admin user if needed
+   ```
+
+6. **Run the application:**
    ```
    python app.py
    ```
+   - Access the app at [http://localhost:5000](http://localhost:5000)
 
-4. Access the application at `http://localhost:5000`
-
-## Deploying to PythonAnywhere
-
-1. Create a PythonAnywhere account at [www.pythonanywhere.com](https://www.pythonanywhere.com)
-
-2. Upload your code using Git:
+7. **(Optional) Run security audits:**
    ```
-   git clone https://github.com/yourusername/simple-banking-app-v2.git
+   pip install pip-audit
+   pip-audit
    ```
 
-3. Install requirements:
-   ```
-   cd simple-banking-app-v2
-   pip install -r requirements.txt
-   ```
+---
 
-4. Set up MySQL database on PythonAnywhere:
-   - Go to the Databases tab in your PythonAnywhere dashboard
-   - Create a new MySQL database
-   - Note the database name, username, and password
-   - Update your .env file with these credentials
-
-5. Initialize your database on PythonAnywhere:
-   ```
-   python init_db.py
-   ```
-
-6. Configure a new web app via the PythonAnywhere dashboard:
-   - Select "Manual configuration"
-   - Choose Python 3.8
-   - Set source code directory to `/home/yourusername/simple-banking-app-v2`
-   - Set working directory to `/home/yourusername/simple-banking-app-v2`
-   - Set WSGI configuration file to point to your Flask app
-
-7. Add environment variables in the PythonAnywhere dashboard for security
-
-## Usage
-
-### Registration
-- Navigate to the registration page
-- Enter username, email, and password
-- Confirm your password
-- Submit the form to create your account (pending admin approval)
-
-### Login
-- Enter your username and password
-- Click "Sign In"
-
-### Account Overview
-- View your current balance
-- See your recent transaction history
-
-### Transfer Funds
-- Navigate to the Transfer page
-- Enter recipient's username or account number
-- Enter the amount to transfer
-- Confirm the transfer details on the confirmation screen
-- Complete the transfer
-
-### Password Reset
-- Click "Forgot your password?" on the login page
-- Enter your registered email address
-- Follow the link in the email (simulated in this demo)
-- Create a new password
-
-### Admin Features
-- Approve new user registrations
-- Activate/deactivate user accounts
-- Create new user accounts
-- Make over-the-counter deposits to user accounts
-- Edit user details including location information
-
-### Manager Features
-- Create new admin accounts
-- Toggle admin status for users
-- View all user transactions
-- Monitor and audit admin activities
-
-## User Roles
-
-The system supports three types of user roles:
-
-1. **Regular Users** - Can manage their own account, make transfers, and view their transaction history.
-
-2. **Admin Users** - Have all regular user privileges plus:
-   - Approve/reject new user registrations
-   - Activate/deactivate user accounts
-   - Create new user accounts
-   - Make deposits to user accounts
-   - Edit user information
-
-3. **Manager Users** - Have all admin privileges plus:
-   - Create and manage admin accounts
-   - View admin transaction logs
-   - Monitor all system transfers
-   - System-wide oversight capabilities
-
-## Address Management with PSGC API
-
-The application integrates with the Philippine Standard Geographic Code (PSGC) API to provide standardized address selection for user profiles. The address system follows the Philippine geographical hierarchy:
-
-- Region
-- Province
-- City/Municipality
-- Barangay
-
-This integration ensures addresses are standardized and validates location data according to the Philippine geographical structure.
-
-## Technologies Used
-
-- **Backend**: Python, Flask
-- **Database**: MySQL (with SQLAlchemy ORM)
-- **Frontend**: HTML, CSS, Bootstrap 5
-- **Authentication**: Flask-Login, Werkzeug, Flask-Bcrypt
-- **Forms**: Flask-WTF, WTForms
-- **Security**: Flask-Limiter for API rate limiting, CSRF protection
-- **External API**: PSGC API for Philippine geographic data
-
-## Rate Limiting
-
-The application uses Flask-Limiter to implement API rate limiting, which protects against potential DoS attacks and abusive bot activity. The rate limits are configured as follows:
-
-- **Login**: 10 attempts per minute
-- **Registration**: 5 attempts per minute
-- **Password Reset**: 5 attempts per hour
-- **Money Transfer**: 20 attempts per hour
-- **API Endpoints**: 30 requests per minute
-- **Admin Dashboard**: 60 requests per hour
-- **Admin Account Creation**: 20 accounts per hour
-- **Admin Deposits**: 30 deposits per hour
-- **Manager Dashboard**: 60 requests per hour
-- **Admin Creation**: 10 admin accounts per hour
-
-By default, the rate limiting data is stored in memory. For production use, it's recommended to use Redis as a storage backend for persistence across application restarts. To enable Redis storage:
-
-1. Install Redis server on your system
-2. Update the `.env` file with your Redis URL:
-   ```
-   REDIS_URL=redis://localhost:6379/0
-   ```
-
-If Redis is not available, the application will automatically fall back to in-memory storage.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+**For any questions or issues, please open an issue on the repository.**

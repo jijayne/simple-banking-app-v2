@@ -19,7 +19,7 @@ class User(UserMixin, db.Model):
     address_line = db.Column(db.String(256), nullable=True)  # Street address, building, etc.
     region_code = db.Column(db.String(20), nullable=True)
     region_name = db.Column(db.String(100), nullable=True)
-    province_code = db.Column(db.String(20), nullable=True)
+    province_code = db.Column(db.String(20), nullable=True)  
     province_name = db.Column(db.String(100), nullable=True)
     city_code = db.Column(db.String(20), nullable=True)
     city_name = db.Column(db.String(100), nullable=True)
