@@ -1,15 +1,45 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    .card {
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+        background-color: #1e88e5;
+        color: white;
+        border-radius: 1rem 1rem 0 0;
+        font-weight: 600;
+    }
+
+    .alert-warning {
+        background-color: #fff3cd;
+        border: none;
+        border-left: 5px solid #ffc107;
+    }
+
+    .btn-success {
+        font-weight: 600;
+    }
+
+    .btn-secondary {
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row">
+<div class="row mt-5">
     <div class="col-md-6 offset-md-3">
         <div class="card">
             <div class="card-header">
-                <h4>Confirm Transfer</h4>
+                <h4 class="mb-0">Confirm Transfer</h4>
             </div>
             <div class="card-body">
                 <div class="alert alert-warning">
-                    <p>Please confirm the following transfer:</p>
+                    <p class="mb-2">Please confirm the following transfer:</p>
                     <hr>
                     <p><strong>To:</strong> {{ recipient.username }}</p>
                     <p><strong>Account Number:</strong> {{ recipient.account_number }}</p>
@@ -17,10 +47,9 @@
                     <p><strong>From Account Balance:</strong> ₱{{ "%.2f"|format(current_user.balance) }}</p>
                     <p><strong>Remaining Balance After Transfer:</strong> ₱{{ "%.2f"|format(current_user.balance - amount) }}</p>
                 </div>
-                
+
                 <form action="{{ url_for('execute_transfer') }}" method="post">
                     {{ form.hidden_tag() }}
-                    
                     <div class="d-flex justify-content-between">
                         <a href="{{ url_for('transfer') }}" class="btn btn-secondary">Cancel</a>
                         {{ form.submit(class="btn btn-success") }}
@@ -30,4 +59,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
