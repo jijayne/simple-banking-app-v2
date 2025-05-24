@@ -63,10 +63,15 @@ class User(UserMixin, db.Model):
     
     def set_password(self, password):
         # Use bcrypt for secure password hashing with salt
+        # Enforce password policy at the model level as a defense-in-depth
+        if not password or len(password) < 8:
+            raise ValueError("Password must be at least 8 characters long.")
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
     
     def check_password(self, password):
         # Use bcrypt to verify password
+        if not self.password_hash:
+            return False
         return bcrypt.check_password_hash(self.password_hash, password)
     
     @property
@@ -145,6 +150,22 @@ class User(UserMixin, db.Model):
         # Regular users can't manage anyone
         return False
 
+    def to_safe_dict(self):
+        """
+        Return a dictionary of user data safe for API responses or logging.
+        Excludes sensitive fields like password_hash and email.
+        """
+        return {
+            "id": self.id,
+            "username": self.username,
+            "account_number": self.account_number,
+            "balance": self.balance,
+            "status": self.status,
+            "is_admin": self.is_admin,
+            "is_manager": self.is_manager,
+            "date_registered": self.date_registered.isoformat() if self.date_registered else None,
+        }
+
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -155,4 +176,4 @@ class Transaction(db.Model):
     details = db.Column(db.Text, nullable=True)  # For storing additional details (e.g., fields modified)
     
     def __repr__(self):
-        return f'<Transaction {self.id} - {self.amount}>' 
+        return f'<Transaction {self.id} - {self.amount}>'

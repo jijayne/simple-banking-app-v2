@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, FloatField, RadioField, SelectField, HiddenField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, NumberRange, Optional
+from wtforms.validators import (
+    DataRequired, Email, EqualTo, ValidationError, NumberRange, Optional, Length, Regexp
+)
 from models import User
 
 class LoginForm(FlaskForm):
@@ -12,11 +14,44 @@ class LoginForm(FlaskForm):
         return super(LoginForm, self).validate()
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    username = StringField(
+        'Username',
+        validators=[
+            DataRequired(),
+            Length(min=4, max=20),
+            Regexp(
+                r'^[A-Za-z0-9_]{4,20}$',
+                message="Username must be 4-20 characters and contain only letters, numbers, or underscores."
+            )
+        ]
+    )
+    email = StringField(
+        'Email',
+        validators=[
+            DataRequired(),
+            Email(message="Invalid email address."),
+            Length(max=120)
+        ]
+    )
+    password = PasswordField(
+        'Password',
+        validators=[
+            DataRequired(),
+            Length(min=8, max=128),
+            Regexp(
+                r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+\-=\[\]{};\'\":\\|,.<>\/?]{8,}$',
+                message="Password must be at least 8 characters, include a letter and a number."
+            )
+        ]
+    )
     password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+        'Repeat Password',
+        validators=[
+            DataRequired(),
+            EqualTo('password', message='Passwords must match.'),
+            Length(min=8, max=128)
+        ]
+    )
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -81,9 +116,25 @@ class ResetPasswordRequestForm(FlaskForm):
         return super(ResetPasswordRequestForm, self).validate()
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('New Password', validators=[DataRequired()])
+    password = PasswordField(
+        'New Password',
+        validators=[
+            DataRequired(),
+            Length(min=8, max=128),
+            Regexp(
+                r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+\-=\[\]{};\'\":\\|,.<>\/?]{8,}$',
+                message="Password must be at least 8 characters, include a letter and a number."
+            )
+        ]
+    )
     password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+        'Repeat Password',
+        validators=[
+            DataRequired(),
+            EqualTo('password', message='Passwords must match.'),
+            Length(min=8, max=128)
+        ]
+    )
     submit = SubmitField('Reset Password')
 
     def validate(self, extra_validators=None):
@@ -156,4 +207,4 @@ class ConfirmTransferForm(FlaskForm):
     recipient_account = HiddenField('Recipient Account Number')
     amount = HiddenField('Amount')
     transfer_type = HiddenField('Transfer Type')
-    submit = SubmitField('Confirm Transfer') 
+    submit = SubmitField('Confirm Transfer')

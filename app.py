@@ -27,6 +27,13 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or secrets.token_hex(16)
 
+        # Security: Secure session cookies and session timeout
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['PERMANENT_SESSION_LIFETIME'] = 1800  # 30 minutes
+    app.config['PREFERRED_URL_SCHEME'] = 'https'
+
     # CSRF Protection
     csrf.init_app(app)
 
@@ -67,6 +74,16 @@ def create_app():
             return jsonify({"error": "Rate limit exceeded", "message": str(e)}), 429
         # Otherwise, return the HTML template
         return render_template('rate_limit_error.html', message=str(e)), 429
+    
+        # Global error handlers
+    @app.errorhandler(404)
+    def not_found_error(error):
+        return render_template('404.html'), 404
+
+    @app.errorhandler(500)
+    def internal_error(error):
+        db.session.rollback()
+        return render_template('500.html'), 500
 
     return app
 

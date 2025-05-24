@@ -67,33 +67,24 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        
-        # Check if this is an old SHA-256 password hash (exactly 64 characters)
-        # SHA-256 hashes are 64 characters long, bcrypt hashes start with $2b$
         if user and user.password_hash and len(user.password_hash) == 64 and not user.password_hash.startswith('$2b$'):
             import hashlib
-            # Verify with old method
             sha2_hash = hashlib.sha256(form.password.data.encode()).hexdigest()
             if sha2_hash == user.password_hash:
-                # Upgrade to bcrypt
                 user.set_password(form.password.data)
                 db.session.commit()
-                # Continue with login
             else:
                 flash('Invalid username or password')
                 return redirect(url_for('login'))
         elif user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
-        
-        # Check if user account is active (unless they're an admin or manager)
         if user.status != 'active' and not user.is_admin and not user.is_manager:
             if user.status == 'pending':
                 flash('Your account is awaiting approval from an administrator.')
-            else:  # deactivated
+            else:
                 flash('Your account has been deactivated. Please contact an administrator.')
             return redirect(url_for('login'))
-            
         login_user(user)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
@@ -113,8 +104,19 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
+        # Defensive: double-check username/email uniqueness
+        if User.query.filter_by(username=form.username.data).first():
+            flash('Username already exists.')
+            return render_template('register.html', title='Register', form=form)
+        if User.query.filter_by(email=form.email.data).first():
+            flash('Email already registered.')
+            return render_template('register.html', title='Register', form=form)
         user = User(username=form.username.data, email=form.email.data, status='pending')
-        user.set_password(form.password.data)
+        try:
+            user.set_password(form.password.data)
+        except ValueError as ve:
+            flash(str(ve))
+            return render_template('register.html', title='Register', form=form)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been registered and is awaiting admin approval.')
@@ -883,6 +885,10 @@ def manager_transfers():
     user_id = request.args.get('user_id')
     user_role = request.args.get('user_role')
     
+    if user_id and not user_id.isdigit():
+        flash('Invalid user ID filter.')
+        return redirect(url_for('manager_transfers'))
+
     if user_id and user_id.isdigit():
         user_id = int(user_id)
         if user_role == 'sender':
@@ -890,7 +896,6 @@ def manager_transfers():
         elif user_role == 'receiver':
             query = query.filter(Transaction.receiver_id == user_id)
         else:
-            # Both sender and receiver
             query = query.filter(
                 db.or_(
                     Transaction.sender_id == user_id,
@@ -908,3 +913,12 @@ def manager_transfers():
                          title='Transfer Transactions', 
                          transactions=transactions,
                          users=users) 
+# Error handlers (add at the very end of routes.py)
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    db.session.rollback()
+    return render_template('500.html'), 500
