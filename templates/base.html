@@ -11,112 +11,77 @@
     <style>
         body {
             padding-top: 60px;
-            background: linear-gradient(135deg, #cfd9df, #e2ebf0);
+            background-color: #f8f9fa;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        .navbar {
-            background: rgba(25, 118, 210, 0.7) !important;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        }
-
         .navbar-brand {
             font-weight: bold;
             letter-spacing: 1px;
             font-size: 1.5rem;
         }
-
         .card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 1rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            color: #000;
             margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
         .transaction-item {
             border-left: 4px solid #dee2e6;
             padding: 10px;
             margin-bottom: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: white;
         }
-
         .transaction-item.sent {
             border-left-color: #dc3545;
         }
-
         .transaction-item.received {
             border-left-color: #28a745;
         }
-
         .balance-card {
             background: linear-gradient(135deg, #007bff, #6610f2);
             color: white;
         }
-
         .flash-messages {
             margin-top: 10px;
         }
-
         .account-badge {
             font-size: 12px;
             padding: 3px 8px;
             border-radius: 10px;
             margin-left: 5px;
         }
-
         .content {
             flex: 1 0 auto;
         }
-
         .footer {
             flex-shrink: 0;
-            background: rgba(52, 58, 64, 0.85);
-            backdrop-filter: blur(6px);
+            background-color: #343a40;
             color: white;
             padding: 25px 0;
             margin-top: 50px;
         }
-
         .footer a {
-            color: #66b2ff;
+            color: #007bff;
             text-decoration: none;
         }
-
         .footer a:hover {
-            color: #ffffff;
+            color: #0056b3;
             text-decoration: underline;
         }
-
         .social-icons {
             font-size: 1.5rem;
         }
-
         .social-icons a {
             margin: 0 10px;
             color: white;
-            transition: color 0.3s ease;
         }
-
         .social-icons a:hover {
-            color: #66b2ff;
-        }
-
-        .alert {
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(6px);
-            border-radius: 0.5rem;
+            color: #007bff;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">SafeLedger</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -209,6 +174,7 @@
         {% block content %}{% endblock %}
     </div>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row">
