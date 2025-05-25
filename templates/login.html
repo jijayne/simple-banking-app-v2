@@ -1,5 +1,56 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(135deg, #e3f2fd, #ffffff);
+    }
+
+    .card {
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        border-radius: 1rem 1rem 0 0;
+        background-color: #1976d2 !important;
+        color: white;
+    }
+
+    .form-control:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #1976d2;
+        border: none;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background-color: #1565c0;
+    }
+
+    a {
+        color: #1976d2;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .text-danger.small {
+        font-size: 0.875rem;
+    }
+
+    .bi-shield-lock-fill {
+        font-size: 1.5rem;
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
