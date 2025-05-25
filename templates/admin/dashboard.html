@@ -1,6 +1,79 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+/* General card styling */
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* Card headers */
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Form inputs */
+.form-control {
+    border-radius: 0.5rem;
+    box-shadow: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.02);
+}
+
+.btn-outline-secondary:hover {
+    background-color: #e2e6ea;
+}
+
+/* Badge styles */
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+}
+
+/* Table enhancements */
+.table thead {
+    background-color: #f1f1f1;
+    font-weight: 600;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+/* Responsive text truncation */
+.text-truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Utility classes */
+.me-1 {
+    margin-right: 0.25rem !important;
+}
+</style>
+
 <div class="row">
     <div class="col-lg-10 offset-lg-1">
         <div class="d-flex justify-content-between align-items-center mb-4">
