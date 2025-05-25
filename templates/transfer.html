@@ -1,5 +1,82 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+  body {
+    background: #f8f9fa;
+  }
+
+  .card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    background-color: #0d6efd;
+    color: white;
+    border-radius: 1rem 1rem 0 0;
+    font-weight: 600;
+  }
+
+  .form-label {
+    font-weight: 500;
+  }
+
+  .form-control {
+    border-radius: 0.5rem;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 8px rgba(13, 110, 253, 0.4);
+    outline: none;
+  }
+
+  .input-group-text {
+    background-color: #e9ecef;
+    border-radius: 0.5rem 0 0 0.5rem;
+  }
+
+  .btn-primary {
+    background-color: #0d6efd;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #0b5ed7;
+  }
+
+  .btn-check:checked + .btn-outline-primary,
+  .btn-outline-primary.active {
+    background-color: #0d6efd;
+    color: white;
+    border-color: #0d6efd;
+  }
+
+  .alert-info {
+    background-color: #e7f1ff;
+    border-radius: 0.5rem;
+    color: #084298;
+    font-weight: 600;
+  }
+
+  .text-danger {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Smooth toggle for username/account fields */
+  #username-field, #account-field {
+    transition: opacity 0.3s ease, max-height 0.3s ease;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="row">
     <div class="col-md-6 offset-md-3">
@@ -68,30 +145,29 @@ document.addEventListener('DOMContentLoaded', function() {
     var usernameField = document.getElementById('username-field');
     var accountField = document.getElementById('account-field');
     
+    function toggleFields(value) {
+        if (value === 'username') {
+            usernameField.style.display = 'block';
+            accountField.style.display = 'none';
+        } else if (value === 'account') {
+            usernameField.style.display = 'none';
+            accountField.style.display = 'block';
+        }
+    }
+    
     for (var i = 0; i < transferType.length; i++) {
         transferType[i].addEventListener('change', function() {
-            if (this.value === 'username') {
-                usernameField.style.display = 'block';
-                accountField.style.display = 'none';
-            } else if (this.value === 'account') {
-                usernameField.style.display = 'none';
-                accountField.style.display = 'block';
-            }
+            toggleFields(this.value);
         });
     }
     
-    // Set initial state
+    // Initial toggle on page load
     for (var i = 0; i < transferType.length; i++) {
         if (transferType[i].checked) {
-            if (transferType[i].value === 'username') {
-                usernameField.style.display = 'block';
-                accountField.style.display = 'none';
-            } else if (transferType[i].value === 'account') {
-                usernameField.style.display = 'none';
-                accountField.style.display = 'block';
-            }
+            toggleFields(transferType[i].value);
+            break;
         }
     }
 });
 </script>
-{% endblock %} 
+{% endblock %}
