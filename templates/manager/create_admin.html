@@ -1,6 +1,61 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+/* Global form enhancements */
+form .form-control {
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+form .form-label {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.text-danger {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Card style */
+.card {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    border: none;
+}
+
+/* Header style */
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    padding: 1rem 1.25rem;
+}
+
+/* Submit button style */
+.btn-primary {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+}
+
+/* Info alert customization */
+.alert-info {
+    background-color: #e7f3fe;
+    border-color: #bee5eb;
+    color: #31708f;
+    font-size: 0.9rem;
+}
+
+/* Responsive form spacing */
+.mb-3 {
+    margin-bottom: 1rem;
+}
+</style>
+
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="card">
