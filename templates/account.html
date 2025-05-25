@@ -2,148 +2,173 @@
 
 {% block head %}
 <style>
-    body {
-        background-color: #f4f6f9;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  body {
+    background: linear-gradient(135deg, #f0f2f5, #ffffff);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+  }
 
-    .balance-card {
-        background: linear-gradient(135deg, #1e88e5, #42a5f5);
-        color: white;
-        border: none;
-        border-radius: 1rem;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
+  .balance-card {
+    background: rgba(66, 165, 245, 0.15);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    color: #ffffff;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
 
-    .balance-card h2 {
-        font-weight: 700;
-    }
+  .balance-card h2 {
+    font-weight: 700;
+    font-size: 2.75rem;
+    color: #ffffff;
+  }
 
+  .balance-card .btn {
+    background-color: #ffffff;
+    color: #1e88e5;
+    font-weight: 600;
+    border: none;
+  }
+
+  .balance-card .btn:hover {
+    background-color: #e3f2fd;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 1rem;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+  }
+
+  .card-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #0d6efd;
+  }
+
+  .transaction-item {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .transaction-item:last-child {
+    border-bottom: none;
+  }
+
+  .transaction-item.sent {
+    background: rgba(255, 0, 0, 0.05);
+  }
+
+  .transaction-item.received {
+    background: rgba(0, 255, 0, 0.05);
+  }
+
+  .badge {
+    font-size: 0.75rem;
+  }
+
+  @media (max-width: 768px) {
     .balance-card .btn {
-        background-color: white;
-        color: #1e88e5;
-        font-weight: 600;
+      width: 100%;
+      margin-top: 1rem;
     }
-
-    .balance-card .btn:hover {
-        background-color: #e3f2fd;
-    }
-
-    .card {
-        border-radius: 0.75rem;
-        border: none;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-    }
-
-    .transaction-item {
-        padding: 1rem;
-        border-bottom: 1px solid #eaeaea;
-    }
-
-    .transaction-item:last-child {
-        border-bottom: none;
-    }
-
-    .transaction-item.sent {
-        background-color: #fff3f3;
-    }
-
-    .transaction-item.received {
-        background-color: #f3fff5;
-    }
-
-    @media (max-width: 768px) {
-        .balance-card .btn {
-            width: 100%;
-            margin-top: 1rem;
-        }
-    }
+  }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-lg-8 offset-lg-2">
-        <h2 class="mb-4">Account Summary</h2>
-        
-        <!-- Balance Card -->
-        <div class="card balance-card mb-4">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="card-title">Current Balance</h5>
-                        <h2 class="display-4">₱{{ "%.2f"|format(current_user.balance) }}</h2>
-                        <p class="mt-2">Account Number: <strong>{{ current_user.account_number }}</strong></p>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        <a href="{{ url_for('transfer') }}" class="btn btn-light mt-3">Make a Transfer</a>
-                    </div>
-                </div>
-            </div>
+  <div class="col-lg-8 offset-lg-2">
+    <h2 class="mb-4 text-primary">Account Summary</h2>
+
+    <!-- Balance Card -->
+    <div class="balance-card mb-4">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>Current Balance</h5>
+          <h2>₱{{ "%.2f"|format(current_user.balance) }}</h2>
+          <p class="mt-2 text-white-50">Account Number: <strong>{{ current_user.account_number }}</strong></p>
         </div>
-        
-        <!-- Transaction History -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Recent Transactions</h5>
-            </div>
-            <div class="card-body">
-                {% if transactions %}
-                    {% for transaction in transactions %}
-                        {% if transaction.sender_id == current_user.id %}
-                            {% if transaction.transaction_type == 'deposit' and current_user.is_admin %}
-                            <div class="transaction-item">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <strong>Admin Deposit to:</strong> {{ transaction.receiver.username }} ({{ transaction.receiver.account_number }})
-                                        <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
-                                        <span class="badge bg-info">Over-the-counter deposit (Admin action)</span>
-                                    </div>
-                                    <div class="text-primary fw-bold">
-                                        ₱{{ "%.2f"|format(transaction.amount) }}
-                                    </div>
-                                </div>
-                            </div>
-                            {% else %}
-                            <div class="transaction-item sent">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <strong>Sent to:</strong> {{ transaction.receiver.username }} ({{ transaction.receiver.account_number }})
-                                        <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
-                                    </div>
-                                    <div class="text-danger fw-bold">
-                                        -₱{{ "%.2f"|format(transaction.amount) }}
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="transaction-item received">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        {% if transaction.transaction_type == 'deposit' %}
-                                            <strong>Deposit by:</strong> {{ transaction.sender.username }}
-                                            <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
-                                            <span class="badge bg-info">Over-the-counter deposit</span>
-                                        {% else %}
-                                            <strong>Received from:</strong> {{ transaction.sender.username }} ({{ transaction.sender.account_number }})
-                                            <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="text-success fw-bold">
-                                        +₱{{ "%.2f"|format(transaction.amount) }}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <div class="text-center p-4">
-                        <p class="text-muted">No transactions yet.</p>
-                    </div>
-                {% endif %}
-            </div>
+        <div class="col-md-6 text-md-end text-center">
+          <a href="{{ url_for('transfer') }}" class="btn btn-light mt-3">Make a Transfer</a>
         </div>
+      </div>
     </div>
+
+    <!-- Transaction History -->
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Transactions</h5>
+      </div>
+      <div class="card-body">
+        {% if transactions %}
+          {% for transaction in transactions %}
+            {% if transaction.sender_id == current_user.id %}
+              {% if transaction.transaction_type == 'deposit' and current_user.is_admin %}
+              <div class="transaction-item">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Admin Deposit to:</strong> {{ transaction.receiver.username }} ({{ transaction.receiver.account_number }})
+                    <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                    <span class="badge bg-info">Over-the-counter deposit (Admin action)</span>
+                  </div>
+                  <div class="text-primary fw-bold">
+                    ₱{{ "%.2f"|format(transaction.amount) }}
+                  </div>
+                </div>
+              </div>
+              {% else %}
+              <div class="transaction-item sent">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <strong>Sent to:</strong> {{ transaction.receiver.username }} ({{ transaction.receiver.account_number }})
+                    <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                  </div>
+                  <div class="text-danger fw-bold">
+                    -₱{{ "%.2f"|format(transaction.amount) }}
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            {% else %}
+              <div class="transaction-item received">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    {% if transaction.transaction_type == 'deposit' %}
+                      <strong>Deposit by:</strong> {{ transaction.sender.username }}
+                      <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                      <span class="badge bg-info">Over-the-counter deposit</span>
+                    {% else %}
+                      <strong>Received from:</strong> {{ transaction.sender.username }} ({{ transaction.sender.account_number }})
+                      <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                    {% endif %}
+                  </div>
+                  <div class="text-success fw-bold">
+                    +₱{{ "%.2f"|format(transaction.amount) }}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <div class="text-center p-4">
+            <p class="text-muted">No transactions yet.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

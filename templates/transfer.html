@@ -3,19 +3,26 @@
 {% block head %}
 <style>
   body {
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #e3f2fd, #ffffff);
+    backdrop-filter: blur(2px);
   }
 
   .card {
-    border-radius: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    color: #333;
   }
 
   .card-header {
-    background-color: #0d6efd;
+    background: rgba(13, 110, 253, 0.85);
     color: white;
-    border-radius: 1rem 1rem 0 0;
+    border-radius: 1.5rem 1.5rem 0 0;
     font-weight: 600;
+    backdrop-filter: blur(6px);
   }
 
   .form-label {
@@ -23,27 +30,32 @@
   }
 
   .form-control {
-    border-radius: 0.5rem;
-    transition: box-shadow 0.2s ease;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(6px);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    color: #212529;
   }
 
   .form-control:focus {
     border-color: #0d6efd;
-    box-shadow: 0 0 8px rgba(13, 110, 253, 0.4);
-    outline: none;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    background-color: rgba(255, 255, 255, 0.4);
   }
 
   .input-group-text {
-    background-color: #e9ecef;
-    border-radius: 0.5rem 0 0 0.5rem;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 0.75rem 0 0 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #495057;
   }
 
   .btn-primary {
     background-color: #0d6efd;
     border: none;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     font-weight: 600;
-    padding: 0.5rem 1rem;
     transition: background-color 0.3s ease;
   }
 
@@ -58,9 +70,16 @@
     border-color: #0d6efd;
   }
 
-  .alert-info {
-    background-color: #e7f1ff;
+  .btn-outline-primary {
+    backdrop-filter: blur(4px);
     border-radius: 0.5rem;
+    border: 1px solid rgba(13, 110, 253, 0.4);
+  }
+
+  .alert-info {
+    background: rgba(231, 241, 255, 0.8);
+    border: 1px solid rgba(13, 110, 253, 0.2);
+    border-radius: 0.75rem;
     color: #084298;
     font-weight: 600;
   }
@@ -70,7 +89,6 @@
     margin-top: 0.25rem;
   }
 
-  /* Smooth toggle for username/account fields */
   #username-field, #account-field {
     transition: opacity 0.3s ease, max-height 0.3s ease;
   }
@@ -78,14 +96,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row mt-5">
     <div class="col-md-6 offset-md-3">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header text-center">
                 <h4>Transfer Money</h4>
             </div>
             <div class="card-body">
-                <div class="alert alert-info">
+                <div class="alert alert-info text-center">
                     Your current balance: <strong>₱{{ "%.2f"|format(current_user.balance) }}</strong>
                 </div>
                 
@@ -129,6 +147,7 @@
                         <div class="text-danger">{{ error }}</div>
                         {% endfor %}
                     </div>
+
                     <div class="d-grid gap-2">
                         {{ form.submit(class="btn btn-primary") }}
                     </div>
@@ -140,34 +159,24 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Show/hide fields based on transfer type
-    var transferType = document.getElementsByName('transfer_type');
-    var usernameField = document.getElementById('username-field');
-    var accountField = document.getElementById('account-field');
+    const transferType = document.getElementsByName('transfer_type');
+    const usernameField = document.getElementById('username-field');
+    const accountField = document.getElementById('account-field');
     
     function toggleFields(value) {
         if (value === 'username') {
             usernameField.style.display = 'block';
             accountField.style.display = 'none';
-        } else if (value === 'account') {
+        } else {
             usernameField.style.display = 'none';
             accountField.style.display = 'block';
         }
     }
-    
-    for (var i = 0; i < transferType.length; i++) {
-        transferType[i].addEventListener('change', function() {
-            toggleFields(this.value);
-        });
-    }
-    
-    // Initial toggle on page load
-    for (var i = 0; i < transferType.length; i++) {
-        if (transferType[i].checked) {
-            toggleFields(transferType[i].value);
-            break;
-        }
-    }
+
+    transferType.forEach(radio => {
+        radio.addEventListener('change', () => toggleFields(radio.value));
+        if (radio.checked) toggleFields(radio.value);
+    });
 });
 </script>
 {% endblock %}
