@@ -1,6 +1,109 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+/* Headings */
+h2, h5 {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Action buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 0.4rem;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-warning,
+.btn-outline-danger,
+.btn-outline-secondary {
+    transition: 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-outline-success:hover {
+    background-color: #198754;
+    color: white;
+}
+
+/* Table styling */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table th {
+    background-color: #f0f2f5;
+    font-weight: 600;
+}
+
+/* Status badge enhancements */
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+/* Card enhancements */
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    border: none;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    padding: 1rem 1.5rem;
+}
+
+/* Responsive alignment */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Text color muted for empty state */
+.text-muted {
+    color: #6c757d !important;
+}
+</style>
+
 <div class="row">
     <div class="col-lg-10 offset-lg-1">
         <div class="d-flex justify-content-between align-items-center mb-4">
