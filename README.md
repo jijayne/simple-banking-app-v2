@@ -171,7 +171,13 @@ SafeLedger Banking App is a web-based banking platform that allows users to regi
    pip install pip-audit
    pip-audit
    ```
+## Cloud Deployment
 
+You can access the live SafeLedger Banking App on our cloud server:
+
+**SafeLegder.pythonanywhere.com**
+
+>
 ---
 
 **For any questions or issues, please open an issue on the repository.**
