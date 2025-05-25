@@ -1,6 +1,62 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    h2 {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .card-header h5 {
+        font-weight: 500;
+        color: #34495e;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .badge.bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .badge.bg-warning {
+        background-color: #ffc107 !important;
+        color: #212529 !important;
+    }
+
+    .badge.bg-danger {
+        background-color: #dc3545 !important;
+    }
+
+    .btn-outline-secondary.btn-sm {
+        font-size: 0.875rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .input-group .form-control {
+        border-right: 0;
+    }
+
+    .input-group .btn {
+        border-left: 0;
+    }
+
+    .table-responsive {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .text-end.fw-bold {
+        color: #17a2b8;
+    }
+</style>
 <div class="row">
     <div class="col-lg-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
