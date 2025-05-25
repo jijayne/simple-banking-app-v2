@@ -1,20 +1,55 @@
 {% extends "base.html" %}
 
+{% block head %}
+<style>
+    .welcome-card {
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .welcome-card .card-header {
+        background-color: #1976d2;
+        color: white;
+        font-weight: 600;
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .card-option {
+        transition: transform 0.2s ease;
+        border-radius: 1rem;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-option:hover {
+        transform: scale(1.03);
+    }
+
+    .card-option .btn {
+        margin-top: 1rem;
+    }
+
+    .bi {
+        font-size: 1.5rem;
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row">
+<div class="row mt-5">
     <div class="col-lg-8 offset-lg-2">
-        <div class="card text-center">
+        <div class="card text-center welcome-card">
             <div class="card-header">
                 <h2>Welcome to SafeLedger</h2>
             </div>
             <div class="card-body">
                 <h5 class="card-title">Hello, {{ current_user.username }}!</h5>
-                <p class="card-text">
-                    What would you like to do today?
-                </p>
+                <p class="card-text">What would you like to do today?</p>
+
                 <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="card">
+                    <div class="col-md-6 mb-3">
+                        <div class="card card-option h-100">
                             <div class="card-body">
                                 <h5 class="card-title"><i class="bi bi-wallet"></i> Account</h5>
                                 <p class="card-text">View your balance and recent transactions</p>
@@ -22,8 +57,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card">
+                    <div class="col-md-6 mb-3">
+                        <div class="card card-option h-100">
                             <div class="card-body">
                                 <h5 class="card-title"><i class="bi bi-arrow-left-right"></i> Transfer</h5>
                                 <p class="card-text">Send money to another user account</p>
@@ -32,8 +67,9 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
