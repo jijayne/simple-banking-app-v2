@@ -179,7 +179,7 @@ You can access the live SafeLedger Banking App on our cloud server:
 
 password for admin: admin-123
 
-https://turbo-space-rotary-phone-979x45vvj494397wr-5000.app.github.dev/login?next=%2F
+https://turbo-space-rotary-phone-979x45vvj494397wr-5000.app.github.dev/login
 ---
 
 ## YouTube Demo Video
