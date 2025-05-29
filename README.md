@@ -177,8 +177,7 @@ SafeLedger Banking App is a web-based banking platform that allows users to regi
 
 You can access the live SafeLedger Banking App on our cloud server:
 
-🔗 [https://safeledger.pythonanywhere.com](https://safeledger.pythonanywhere.com)
-
+https://turbo-space-rotary-phone-979x45vvj494397wr-5000.app.github.dev/login?next=%2F
 ---
 
 ## YouTube Demo Video
