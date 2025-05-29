@@ -177,9 +177,7 @@ SafeLedger Banking App is a web-based banking platform that allows users to regi
 
 You can access the live SafeLedger Banking App on our cloud server:
 
-username is either admin or manager.
-
-password for admin and manager: admin-123
+password for admin: admin-123
 
 https://turbo-space-rotary-phone-979x45vvj494397wr-5000.app.github.dev/login?next=%2F
 ---
