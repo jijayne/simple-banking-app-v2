@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* Headings */
+h2, h5 {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Action buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 0.4rem;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-warning,
+.btn-outline-danger,
+.btn-outline-secondary {
+    transition: 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.btn-outline-warning:hover {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-outline-success:hover {
+    background-color: #198754;
+    color: white;
+}
+
+/* Table styling */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table th {
+    background-color: #f0f2f5;
+    font-weight: 600;
+}
+
+/* Status badge enhancements */
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+/* Card enhancements */
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+    border: none;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    padding: 1rem 1.5rem;
+}
+
+/* Responsive alignment */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Text color muted for empty state */
+.text-muted {
+    color: #6c757d !important;
+}
+</style>
+
+<div class="row">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Manager Dashboard</h2>
+            <div>
+                <a href="{{ url_for('create_admin') }}" class="btn btn-primary me-2">Create Admin Account</a>
+                <a href="{{ url_for('user_list') }}" class="btn btn-outline-primary me-2">View All Users</a>
+                <a href="{{ url_for('admin_list') }}" class="btn btn-outline-warning me-2">View All Admins</a>
+                <a href="{{ url_for('admin_transactions') }}" class="btn btn-outline-danger me-2">Audit Admin Transactions</a>
+                <a href="{{ url_for('manager_transfers') }}" class="btn btn-outline-success">View Transfers</a>
+            </div>
+        </div>
+        
+        <!-- Admin Management -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Admin Accounts</h5>
+                <div>
+                    <a href="{{ url_for('admin_transactions') }}" class="btn btn-sm btn-outline-secondary me-2">
+                        <i class="bi bi-journal-text"></i> Admin Audit
+                    </a>
+                    <a href="{{ url_for('manager_transfers') }}" class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-arrow-left-right"></i> Transfers
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Account Number</th>
+                                <th>Status</th>
+                                <th>Date Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admin in admins %}
+                            <tr>
+                                <td>{{ admin.username }}</td>
+                                <td>{{ admin.email }}</td>
+                                <td>{{ admin.account_number }}</td>
+                                <td>
+                                    {% if admin.status == 'active' %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% elif admin.status == 'deactivated' %}
+                                    <span class="badge bg-danger">Deactivated</span>
+                                    {% else %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ admin.date_registered.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    <a href="{{ url_for('toggle_admin', user_id=admin.id) }}" class="btn btn-sm btn-warning">
+                                        Remove Admin Role
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if not admins %}
+                <div class="text-center p-4">
+                    <p class="text-muted">No admin accounts found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

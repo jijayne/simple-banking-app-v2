@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<style>
+/* Card styling */
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    border: none;
+}
+
+/* Card headers */
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Form controls */
+.form-control {
+    border-radius: 0.5rem;
+    box-shadow: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.02);
+}
+
+/* Input group button */
+.input-group-text, 
+.input-group .btn {
+    border-radius: 0.5rem;
+}
+
+/* Badge styles */
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+}
+
+/* Form text */
+.form-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Responsive layout for account details */
+.card-body p {
+    margin-bottom: 0.5rem;
+}
+
+/* Margin adjustments */
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Over-the-Counter Deposit</h2>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-primary">Back to Dashboard</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Deposit Form</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin_deposit') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.account_number.label(class="form-label") }}
+                        <div class="input-group">
+                            {{ form.account_number(class="form-control") }}
+                            <button type="button" class="btn btn-outline-secondary" id="lookup-btn">Lookup Account</button>
+                        </div>
+                        {% for error in form.account_number.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                        <div class="form-text">Enter the user's account number to deposit funds</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.amount.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            {{ form.amount(class="form-control") }}
+                        </div>
+                        {% for error in form.amount.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Account Verification Panel (displays after account number lookup) -->
+        {% if account_details %}
+        <div class="card mt-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Account Found</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Username:</strong> {{ account_details.username }}</p>
+                        <p><strong>Account Number:</strong> {{ account_details.account_number }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Current Balance:</strong> ₱{{ "%.2f"|format(account_details.balance) }}</p>
+                        <p><strong>Status:</strong> 
+                            {% if account_details.status == 'active' %}
+                            <span class="badge bg-success">Active</span>
+                            {% elif account_details.status == 'deactivated' %}
+                            <span class="badge bg-danger">Deactivated</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Account lookup functionality
+        const lookupBtn = document.getElementById('lookup-btn');
+        const accountInput = document.getElementById('account_number');
+        
+        lookupBtn.addEventListener('click', function() {
+            const accountNumber = accountInput.value.trim();
+            if (accountNumber) {
+                window.location.href = "{{ url_for('admin_deposit') }}?account_number=" + accountNumber;
+            } else {
+                alert('Please enter an account number');
+            }
+        });
+    });
+</script>
+{% endblock %} 

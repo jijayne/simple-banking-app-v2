@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    body {
+        background: linear-gradient(135deg, #e3f2fd, #ffffff);
+    }
+
+    .card {
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        border-radius: 1rem 1rem 0 0;
+        background-color: #1976d2 !important;
+        color: white;
+    }
+
+    .form-control:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #1976d2;
+        border: none;
+        transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-primary:hover {
+        background-color: #1565c0;
+    }
+
+    a {
+        color: #1976d2;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .text-danger.small {
+        font-size: 0.875rem;
+    }
+
+    .bi-shield-lock-fill {
+        font-size: 1.5rem;
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0"><i class="bi bi-shield-lock-fill me-2"></i>Sign In to SafeLedger</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="mb-3">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control", placeholder="Enter your username", autofocus=True, autocomplete="username") }}
+                            {% for error in form.username.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control", placeholder="Enter your password", autocomplete="current-password") }}
+                            {% for error in form.password.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                    <div class="mt-4 text-center">
+                        <p class="mb-1">New to <strong>SafeLedger</strong>? <a href="{{ url_for('register') }}">Register here</a></p>
+                        <p><a href="{{ url_for('reset_password_request') }}">Forgot your password?</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

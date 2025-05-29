@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+/* General card styling */
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+/* Card headers */
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Form inputs */
+.form-control {
+    border-radius: 0.5rem;
+    box-shadow: none;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover {
+    transform: scale(1.02);
+}
+
+.btn-outline-secondary:hover {
+    background-color: #e2e6ea;
+}
+
+/* Badge styles */
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+}
+
+/* Table enhancements */
+.table thead {
+    background-color: #f1f1f1;
+    font-weight: 600;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+}
+
+/* Responsive text truncation */
+.text-truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Utility classes */
+.me-1 {
+    margin-right: 0.25rem !important;
+}
+</style>
+
+<div class="row">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Admin Dashboard</h2>
+            <div>
+                <a href="{{ url_for('admin_deposit') }}" class="btn btn-success me-2">Deposit Funds</a>
+                <a href="{{ url_for('create_account') }}" class="btn btn-primary">Create New Account</a>
+            </div>
+        </div>
+        
+        <!-- User Management -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">User Accounts</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Account Number</th>
+                                <th>Address</th>
+                                <th>Balance</th>
+                                <th>Status</th>
+                                <th>Date Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>
+                                    {% if user.firstname and user.lastname %}
+                                    {{ user.firstname }} {{ user.lastname }}
+                                    {% else %}
+                                    <span class="text-muted">Not provided</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.account_number }}</td>
+                                <td>
+                                    {% if user.address_line or user.city_name %}
+                                    <span class="d-inline-block text-truncate" style="max-width: 200px;" title="{{ user.full_address }}">
+                                        {{ user.full_address }}
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">Not provided</span>
+                                    {% endif %}
+                                </td>
+                                <td>₱{{ "%.2f"|format(user.balance) }}</td>
+                                <td>
+                                    {% if user.status == 'active' %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% elif user.status == 'deactivated' %}
+                                    <span class="badge bg-danger">Deactivated</span>
+                                    {% else %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.date_registered.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    {% if user.status == 'active' %}
+                                    <a href="{{ url_for('deactivate_user', user_id=user.id) }}" class="btn btn-sm btn-warning me-1">Deactivate</a>
+                                    {% elif user.status == 'deactivated' %}
+                                    <a href="{{ url_for('activate_user', user_id=user.id) }}" class="btn btn-sm btn-success me-1">Activate</a>
+                                    {% else %}
+                                    <a href="{{ url_for('activate_user', user_id=user.id) }}" class="btn btn-sm btn-success me-1">Activate</a>
+                                    {% endif %}
+                                    <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if not users %}
+                <div class="text-center p-4">
+                    <p class="text-muted">No user accounts found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
